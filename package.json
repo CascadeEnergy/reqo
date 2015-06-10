@@ -1,6 +1,6 @@
 {
   "name": "reqo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Function decorator for validating required options in an options hash.",
   "repository": "CascadeEnergy/reqo",
   "author": {
