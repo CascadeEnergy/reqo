@@ -1,4 +1,12 @@
-import {difference, keys, intersection, isEqual, isPlainObject} from 'lodash';
+'use strict';
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+_Object$defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _lodash = require('lodash');
 
 /**
  * Decorator which validates an options hash and delegates to `func`.
@@ -18,11 +26,18 @@ import {difference, keys, intersection, isEqual, isPlainObject} from 'lodash';
  *
  * @returns {Function}
  */
-function reqo(func, requiredKeys, optionsIndex = 0, context = undefined) {
-  return function(...args) {
-    const options = args[optionsIndex];
+function reqo(func, requiredKeys) {
+  var optionsIndex = arguments[2] === undefined ? 0 : arguments[2];
+  var context = arguments[3] === undefined ? undefined : arguments[3];
 
-    if (!isPlainObject(options)) {
+  return function () {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var options = args[optionsIndex];
+
+    if (!(0, _lodash.isPlainObject)(options)) {
       throw new TypeError('options must be a plain object literal');
     }
 
@@ -30,20 +45,21 @@ function reqo(func, requiredKeys, optionsIndex = 0, context = undefined) {
     // as properties in the options hash. Does so by taking an intersection
     // of the options keys and the required keys, and then checking the
     // intersection is equivalent to the requirements.
-    const optionsKeys = keys(options);
-    const intersectionOfKeys = intersection(requiredKeys, optionsKeys);
-    const hasAllRequiredKeys = isEqual(intersectionOfKeys, requiredKeys);
+    var optionsKeys = (0, _lodash.keys)(options);
+    var intersectionOfKeys = (0, _lodash.intersection)(requiredKeys, optionsKeys);
+    var hasAllRequiredKeys = (0, _lodash.isEqual)(intersectionOfKeys, requiredKeys);
 
     // If any required keys are missing in options hash.
     if (!hasAllRequiredKeys) {
-      const missingOptions = difference(requiredKeys, intersectionOfKeys);
+      var missingOptions = (0, _lodash.difference)(requiredKeys, intersectionOfKeys);
       throw new RangeError('Options must contain ' + missingOptions.toString());
     }
 
     // Call the decorated function in the right context with its' arguments.
-    const boundFunc = func.bind(context);
-    return boundFunc(...args);
+    var boundFunc = func.bind(context);
+    return boundFunc.apply(undefined, args);
   };
 }
 
-export default reqo;
+exports['default'] = reqo;
+module.exports = exports['default'];
